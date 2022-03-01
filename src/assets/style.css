@@ -1,0 +1,19 @@
+/* Home.vue */
+.shorten{
+    @apply bg-light-100 items-center justify-center flex flex-col p-5 w-200 rounded-lg shadow-lg;
+}
+.shorten span{
+    @apply font-bold text-center text-gray-700 text-[1.2em] pt-5 pb-10;
+}
+
+.shorten .form{
+    @apply flex w-full items-center justify-center;
+}
+
+.shorten .form .urlInput{
+    @apply bg-light-900 text-gray-500 outline-transparent appearance-none h-10 rounded-l-lg font-bold pl-5 w-[80%] max-w-100;
+}
+
+.shorten .form .urlBtn{
+    @apply h-10 px-5 cursor-pointer hover:bg-pink-300 bg-pink-400 min-w-25 w-[20%] rounded-r-lg text-light-100 font-bold;
+}
