@@ -15,5 +15,9 @@
 }
 
 .shorten .form .urlBtn{
-    @apply h-10 px-5 cursor-pointer hover:bg-pink-300 bg-pink-400 min-w-25 w-[20%] rounded-r-lg text-light-100 font-bold;
+    @apply h-10 px-5 cursor-pointer hover:bg-pink-300 bg-pink-400  rounded-r-lg text-light-100 font-bold;
+}
+
+.urlBtnSize{
+    @apply min-w-25 w-[20%];
 }
