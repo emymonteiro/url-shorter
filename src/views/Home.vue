@@ -64,13 +64,11 @@
     result = await bitly.shorten(link);
 
     await store.dispatch("getAPI", 'groups/Bm33f6skfJJ/bitlinks/clicks')
-    console.log(store.state.response)
 
     urlShorted.extended = result.long_url
     urlShorted.cutted = result.link
   }
-  /* import { db } from '../firebase'
-  import  { doc, getDoc, setDoc } from 'firebase/firestore' */
+
     async function fireStore(){
       store.dispatch('updateDB', urlShorted)
   }

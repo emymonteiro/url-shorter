@@ -11,14 +11,14 @@
                   <tr class="text-left">
                     <th class="">ID</th>
                     <th class="">Link </th>
-                    <th class="">Acessos</th>
+                    <th class="text-center">Acessos</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="" v-for="(item, index) in store.state.response.sorted_links" :key="index">
+                  <tr class="" v-for="(item, index) in $store.state.response.sorted_links" :key="index">
                     <td class="">{{index+1}}</td>
                     <td class=""><a v-bind:href="`https://${item.id}`"  target="_blank" class="text-blue-600">{{item.id}}</a></td>
-                    <td class="">{{item.clicks}}</td>
+                    <td class="text-center">{{item.clicks}}</td>
                   </tr>
                 </tbody>
             </table>
@@ -29,9 +29,11 @@
 
 <script setup>
     import { onBeforeMount } from 'vue';
-    import store from '../store';
+    import { useStore } from 'vuex';
 
-    onBeforeMount(() => {
-        store.dispatch("getAPI", 'groups/Bm33f6skfJJ/bitlinks/clicks')
+    const store = useStore()
+
+    onBeforeMount(async () => {
+        await store.dispatch("getAPI", 'groups/Bm33f6skfJJ/bitlinks/clicks')
     })
 </script>

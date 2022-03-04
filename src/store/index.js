@@ -15,10 +15,14 @@ const api = axios.create({
 export default createStore({
   state: {
     user: null,
+
     response: null,
+
     database: null
   },
+
   mutations: {
+
     SET_USER (state, user){
       state.user = user
     },
@@ -43,7 +47,9 @@ export default createStore({
     },
     
   },
+
   actions: {
+
     async getDB({ commit, state}){
       if (!state.user)
         return
@@ -52,10 +58,10 @@ export default createStore({
       const docs = await getDoc(data)
 
       if (docs.exists()){
-        console.log('commitou')
         commit('SET_DATABASE', docs.data())
       }
     },
+
 
     async updateDB({state}, info){
       if (!state.user)
@@ -73,6 +79,7 @@ export default createStore({
       this.dispatch("getDB")
     },
 
+
     async deleteFromDB({ state}, result){
       if (!state.user)
         return
@@ -88,14 +95,17 @@ export default createStore({
       this.dispatch("getDB")
     },
 
+
     async getAPI({ commit}, params){
       const res = await api.get(params)
       commit('SET_RES', res.data)
     },
 
+
     resetAPI({commit}){
       commit('CLEAR_RES')
     },
+
 
     async login({ commit}, details){
       const { email, password } = details
@@ -121,6 +131,7 @@ export default createStore({
         router.push('/')
     },
 
+
     async register({ commit}, details){
       const { email, password } = details
 
@@ -144,6 +155,7 @@ export default createStore({
       router.push('/')
       commit('SET_USER', auth.currentUser)
     },
+
     
     async logout ({ commit }){
       await signOut(auth)
@@ -152,6 +164,7 @@ export default createStore({
       commit('CLEAR_DATABASE')
       router.push('/')
     },
+    
 
     fetchUser ({commit}){
       auth.onAuthStateChanged(async user => {
