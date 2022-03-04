@@ -1,7 +1,7 @@
 <template>
     <div class="shorten">
       <div class="flex w-full justify-end items-center">
-        <a href="../" class="mr-5 text-gray-400 hover:text-pink-400">Voltar</a>
+        <router-link to="/" class="mr-5 text-gray-400 hover:text-pink-400">Voltar</router-link>
       </div>
       <span>TOP Links Mais Acessados</span>
       <div class="flex flex-col max-w-125 w-full pb-5 items-center justify-center">

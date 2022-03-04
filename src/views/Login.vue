@@ -1,7 +1,7 @@
 <template>
     <div class="shorten">
       <div class="flex w-full justify-end items-center">
-        <a href="../" class="mr-5 text-gray-400 hover:text-pink-400">Voltar</a>
+        <router-link to="/" class="mr-5 text-gray-400 hover:text-pink-400">Voltar</router-link>
       </div>
       <span>LOGIN</span>
       <a v-if="err" class="text-red-700 pb-3 font-bold">{{err}}</a>

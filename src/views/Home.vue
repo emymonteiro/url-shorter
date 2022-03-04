@@ -1,7 +1,7 @@
 <template>
     <div class="shorten">
       <User :user="$store.state.user" />
-      <a href="/tier" class="hover:text-pink-500 text-gray-500 font-bold py-3 self-end mr-8"> <Icon class="text-pink-500" icon="mdi:podium"/> Trending Topics</a>
+      <router-link to="/tier" class="hover:text-pink-500 text-gray-500 font-bold py-3 self-end mr-8"> <Icon class="text-pink-500" icon="mdi:podium"/> Trending Topics</router-link>
       <span>Cole o URL para encurtar o link</span>
       <div class="flex flex-col max-w-125 w-full pb-5">
         <!-- Formulario p/ encurtamento do link -->

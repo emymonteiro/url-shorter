@@ -7,8 +7,8 @@
         <a @click.prevent="$store.dispatch('logout')" href="" class="sm:mr-5 text-[1.1em] text-gray-400 hover:text-pink-400"><Icon icon="mdi:logout" /></a>
       </div>
       <div v-else class="flex w-full justify-end items-center">
-        <a href="/login" class="mr-3 flex space-x-2 items-center border rounded-xl px-4 py-1 hover:border-pink-500 text-gray-400 hover:text-pink-400"><Icon icon="bi:person-badge" /><a>Login</a></a>
-        <a href="/register" class="sm:mr-5 flex space-x-2 items-center border rounded-xl px-4 py-1 hover:border-pink-500 text-gray-400 hover:text-pink-400"><Icon icon="clarity:key-solid" /><a>Registro</a></a>
+        <router-link to="/login" class="mr-3 flex space-x-2 items-center border rounded-xl px-4 py-1 hover:border-pink-500 text-gray-400 hover:text-pink-400"><Icon icon="bi:person-badge" /><a>Login</a></router-link>
+        <router-link to="/register" class="sm:mr-5 flex space-x-2 items-center border rounded-xl px-4 py-1 hover:border-pink-500 text-gray-400 hover:text-pink-400"><Icon icon="clarity:key-solid" /><a>Registro</a></router-link>
     </div>
 </template>
 
