@@ -1,8 +1,10 @@
 import { createStore } from 'vuex'
-import { auth } from '../firebase'
+import { auth , db } from '../firebase'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import router from '../router'
 import axios from 'axios'
+
+import  { doc, getDoc, setDoc } from 'firebase/firestore'
 
 const api = axios.create({
   baseURL: 'https://api-ssl.bitly.com/v4/',
@@ -13,7 +15,8 @@ const api = axios.create({
 export default createStore({
   state: {
     user: null,
-    response: null
+    response: null,
+    database: null
   },
   mutations: {
     SET_USER (state, user){
@@ -22,14 +25,69 @@ export default createStore({
     CLEAR_USER (state){
       state.user = null
     },
+
+
     SET_RES(state, data){
       state.response = data
     },
     CLEAR_RES(state){
       state.response = null
-    }
+    },
+
+
+    SET_DATABASE(state, data){
+      state.database = data
+    },
+    CLEAR_DATABASE(state){
+      state.database = null
+    },
+    
   },
   actions: {
+    async getDB({ commit, state}){
+      if (!state.user)
+        return
+      
+      const data = await doc(db, "users", state.user.uid)
+      const docs = await getDoc(data)
+
+      if (docs.exists()){
+        console.log('commitou')
+        commit('SET_DATABASE', docs.data())
+      }
+    },
+
+    async updateDB({state}, info){
+      if (!state.user)
+        return
+      
+      const data = await doc(db, "users", state.user.uid)
+      const docs = await getDoc(data)
+      let values = {}
+      if (docs.exists()){
+        values = docs.data().values
+      }
+      values[info.cutted] = info.extended
+
+      await setDoc(data, { values })
+      this.dispatch("getDB")
+    },
+
+    async deleteFromDB({ state}, result){
+      if (!state.user)
+        return
+      
+      const data = await doc(db, "users", state.user.uid)
+      const docs = await getDoc(data)
+
+      const values = docs.data().values
+
+      delete values[result]
+
+      await setDoc(data, { values })
+      this.dispatch("getDB")
+    },
+
     async getAPI({ commit}, params){
       const res = await api.get(params)
       commit('SET_RES', res.data)
@@ -91,6 +149,7 @@ export default createStore({
       await signOut(auth)
 
       commit('CLEAR_USER')
+      commit('CLEAR_DATABASE')
       router.push('/')
     },
 
@@ -98,9 +157,10 @@ export default createStore({
       auth.onAuthStateChanged(async user => {
         if (user === null){
           commit('CLEAR_USER')
+          commit('CLEAR_DATABASE')
         }else{
           commit('SET_USER', user)
-
+          this.dispatch('getDB')
           if (router.isReady() && router.currentRoute.value.path === '/login'){
             router.push('/')
           }

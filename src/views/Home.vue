@@ -26,7 +26,7 @@
                 </td>
                 <td class="text-right text-gray-500 space-x-3 ">
                   <a class="hover:text-pink-400 cursor-pointer" @click="copyClipboard"><Icon icon="akar-icons:copy" /></a>
-                  <a v-if="$store.state.user" class="hover:text-pink-400 text-green-600" href=""><Icon class="" icon="akar-icons:circle-plus" /></a>
+                  <a v-if="$store.state.user" class="hover:text-pink-400 text-green-600 cursor-pointer" @click="fireStore"><Icon class="" icon="akar-icons:circle-plus" /></a>
                   <a class="hover:text-pink-500 text-red-600 cursor-pointer" @click="removeUrl"><Icon icon="akar-icons:circle-x" /></a>
                 </td>
               </tr>
@@ -34,7 +34,7 @@
           </table>
         </div>
 
-        <Utilities :user="$store.state.user" />
+        <Utilities :state="$store.state" />
       </div>
     </div>
 </template>
@@ -69,6 +69,12 @@
     urlShorted.extended = result.long_url
     urlShorted.cutted = result.link
   }
+  /* import { db } from '../firebase'
+  import  { doc, getDoc, setDoc } from 'firebase/firestore' */
+    async function fireStore(){
+      store.dispatch('updateDB', urlShorted)
+  }
+
   //-----------------------------------------//
   async function copyClipboard(){
     try {
@@ -85,7 +91,7 @@
   }
 
   const store = useStore();
-  onBeforeMount(() => {
-    store.dispatch('fetchUser')
+  onBeforeMount(async () => {
+    await store.dispatch('fetchUser')
   })
 </script>
