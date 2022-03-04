@@ -1,67 +1,88 @@
 <template>
     <div class="shorten">
-      <div v-if="$store.state.user" class="flex w-full justify-between items-center">
-        <a class="sm:ml-5 text-gray-400 flex items-center">
-          <Icon class="mr-2" icon="carbon:user-filled" /> 
-          {{store.state.user.email}}
-        </a>
-        <a @click.prevent="$store.dispatch('logout')" href="" class="sm:mr-5 text-[1.1em] text-gray-400 hover:text-pink-400"><Icon icon="mdi:logout" /></a>
-      </div>
-      <div v-else class="flex w-full justify-end items-center">
-        <a href="/login" class="mr-3 flex space-x-2 items-center border rounded-xl px-4 py-1 hover:border-pink-500 text-gray-400 hover:text-pink-400"><Icon icon="bi:person-badge" /><a>Login</a></a>
-        <a href="/register" class="sm:mr-5 flex space-x-2 items-center border rounded-xl px-4 py-1 hover:border-pink-500 text-gray-400 hover:text-pink-400"><Icon icon="clarity:key-solid" /><a>Registro</a></a>
-      </div>
+      <User :user="$store.state.user" />
+      <a href="/tier" class="hover:text-pink-500 text-gray-500 font-bold py-3 self-end mr-8"> <Icon class="text-pink-500" icon="mdi:podium"/> Trending Topics</a>
       <span>Cole o URL para encurtar o link</span>
-      <div class="flex flex-col max-w-125 w-full">
-        <form class="form" action="">
-          <input class="urlInput" placeholder="Cole para encurtar" type="url" name="" id="" required>
+      <div class="flex flex-col max-w-125 w-full pb-5">
+        <!-- Formulario p/ encurtamento do link -->
+        <form class="form" @submit.prevent="shorten">
+          <input class="urlInput" placeholder="Cole para encurtar" type="url" name="link" required>
           <input class="urlBtn urlBtnSize" type="submit" value="Encurtar">
         </form>
-        <div class="mt-2 text-gray-600 max-h-150 overflow-auto">
-          <a href="" class="hover:text-pink-500 font-bold"> <Icon icon="mdi:podium"/> Tendências</a>
-          <table v-if="$store.state.user" class="w-full mt-5">
+        <!-- Table com a informação do resultado -->
+        <div v-if="urlShorted.extended && urlShorted.cutted" class="shadow p-3 mt-3 bg-light-400 text-gray-500">
+          <table class="w-full table-fixed">
             <thead>
-              <tr class="h-10">
-                <th class="text-left flex items-center space-x-1"><Icon icon="akar-icons:link-chain" /><a>Meus Links</a> </th>
-                <th >Ações</th>
+              <tr>
+                <th class="text-left">Padrão </th>
+                <th class="text-left ml-5"><a class="ml-5">Encurtada</a> </th>
               </tr>
             </thead>
-            <tbody>
-              <tr class="border-b h-10">
-                <td>meulink.shorted/asd</td>
-                <td class="text-center text-gray-500 space-x-3 ">
-                  <a class="hover:text-pink-400" href=""><Icon icon="akar-icons:clipboard" /></a>
-                  <a class="hover:text-red-500" href=""><Icon icon="bi:trash" /></a>
+            <tbody >
+              <tr class="">
+                <td class="overflow-ellipsis whitespace-nowrap overflow-hidden"><a v-bind:href="urlShorted.extended" target="_blank" class="text-blue-600">{{urlShorted.extended}}</a></td>
+                <td class=" overflow-ellipsis whitespace-nowrap overflow-hidden ">
+                  <a v-bind:href="urlShorted.cutted" target="_blank" class="text-blue-600 ml-5 cursor-pointer">{{urlShorted.cutted}}</a>
                 </td>
-              </tr>
-              <tr class="border-b h-10">
-                <td>meulink.shorted/asd</td>
-                <td class="text-center text-gray-500 space-x-3 ">
-                  <a class="hover:text-pink-400" href=""><Icon icon="akar-icons:clipboard" /></a>
-                  <a class="hover:text-red-500" href=""><Icon icon="bi:trash" /></a>
-                </td>
-              </tr>
-              <tr class="border-b h-10">
-                <td>meulink.shorted/asd</td>
-                <td class="text-center text-gray-500 space-x-3 ">
-                  <a class="hover:text-pink-400" href=""><Icon icon="akar-icons:clipboard" /></a>
-                  <a class="hover:text-red-500" href=""><Icon icon="bi:trash" /></a>
+                <td class="text-right text-gray-500 space-x-3 ">
+                  <a class="hover:text-pink-400 cursor-pointer" @click="copyClipboard"><Icon icon="akar-icons:copy" /></a>
+                  <a v-if="$store.state.user" class="hover:text-pink-400 text-green-600" href=""><Icon class="" icon="akar-icons:circle-plus" /></a>
+                  <a class="hover:text-pink-500 text-red-600 cursor-pointer" @click="removeUrl"><Icon icon="akar-icons:circle-x" /></a>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        <Utilities :user="$store.state.user" />
       </div>
     </div>
 </template>
 
-<!-- -->
-
 <script setup>
+  //Icons
   import { Icon } from '@iconify/vue'
+  //Components
+  import Utilities from '../components/Utilities.vue';
+  import User from '../components/User.vue';
   
-  import { onBeforeMount } from 'vue';
+  //vue and store
+  import { onBeforeMount, reactive } from 'vue';
   import { useStore } from 'vuex';
+
+  //api shortener
+  import { BitlyClient } from 'bitly';
+
+  //-----------------------------------------------------------------//
+  const urlShorted = reactive({})
+  const bitly = new BitlyClient('26cba2c97fa6945b02d89ab23831efb6d92bce3a', {});
+  
+
+  async function shorten(e){
+    const { link } = Object.fromEntries(new FormData(e.target));
+    let result;
+    result = await bitly.shorten(link);
+
+    await store.dispatch("getAPI", 'groups/Bm33f6skfJJ/bitlinks/clicks')
+    console.log(store.state.response)
+
+    urlShorted.extended = result.long_url
+    urlShorted.cutted = result.link
+  }
+  //-----------------------------------------//
+  async function copyClipboard(){
+    try {
+      await navigator.clipboard.writeText(urlShorted.cutted);
+      alert('Copiado');
+    } catch($e) {
+      alert('Ocorreu um erro');
+    }
+  }
+
+  function removeUrl(){
+    urlShorted.extended = null
+    urlShorted.cutted = null
+  }
 
   const store = useStore();
   onBeforeMount(() => {

@@ -11,7 +11,7 @@
 }
 
 .shorten .form .urlInput{
-    @apply bg-light-900 text-gray-500 outline-transparent appearance-none h-10 rounded-l-lg font-bold pl-5 w-[80%] max-w-100;
+    @apply bg-light-900 text-gray-500 outline-transparent appearance-none h-10 rounded-l-lg pl-5 w-[80%] max-w-100;
 }
 
 .shorten .form .urlBtn{

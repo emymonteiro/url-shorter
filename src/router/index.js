@@ -18,6 +18,11 @@ const routes = [
     name: 'Register',
     component: () => import('../views/Register.vue')
   },
+  {
+    path: '/tier',
+    name: 'Tier',
+    component: () => import('../views/Tier.vue')
+  },
 ]
 
 const router = createRouter({
