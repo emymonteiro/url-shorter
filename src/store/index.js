@@ -56,9 +56,9 @@ export default createStore({
       
       const data = await doc(db, "users", state.user.uid)
       const docs = await getDoc(data)
-
       if (docs.exists()){
-        commit('SET_DATABASE', docs.data())
+        const sorting = Object.entries(docs.data().values).sort((a,b) => Number(b[1].favorited) - Number(a[1].favorited));
+        commit('SET_DATABASE', sorting)
       }
     },
 
@@ -73,7 +73,7 @@ export default createStore({
       if (docs.exists()){
         values = docs.data().values
       }
-      values[info.cutted] = info.extended
+      values[info.cutted] = { link: info.extended, favorited: false}
 
       await setDoc(data, { values })
       this.dispatch("getDB")
@@ -93,6 +93,21 @@ export default createStore({
 
       await setDoc(data, { values })
       this.dispatch("getDB")
+    },
+
+    async favoriteLink({ state}, result){
+      if (!state.user)
+      return
+
+    const data = await doc(db, "users", state.user.uid)
+    const docs = await getDoc(data)
+
+    const values = docs.data().values
+
+    values[result].favorited = !values[result].favorited
+
+    await setDoc(data, { values })
+    this.dispatch("getDB")
     },
 
 
